@@ -4,7 +4,6 @@ import PrivateRoute from "./privateRoute";
 //COMPONENTS
 import AppLayout from "../components/layout/Layout";
 import Login from "../components/auth/Login";
-import Subjects from "../components/user/Subjects";
 import Labs from "../components/user/Labs";
 
 export default class ApplicationRouter extends React.Component {
@@ -15,9 +14,6 @@ export default class ApplicationRouter extends React.Component {
           <AppLayout>
             <Switch>
               <Redirect from="/" exact to="/labs" />
-              {
-                //<PrivateRoute exact path="/subjects" component={Subjects} />}
-              }
               <PrivateRoute path="/labs" component={Labs} />
               <Route path="/login" component={Login} />
             </Switch>
