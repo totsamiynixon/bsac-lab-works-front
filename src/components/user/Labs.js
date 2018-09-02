@@ -4,6 +4,8 @@ import axios from "axios";
 import LabsTable from "./labs/LabsTable";
 import MaterialsModal from "./labs/MaterialsModal";
 import SubjectsAutocomplete from "./labs/SubjectsAutocomplete";
+
+//TODO:Implement flux or redux
 class Labs extends React.Component {
   state = {
     open: false,

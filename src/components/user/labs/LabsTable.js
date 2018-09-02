@@ -60,6 +60,9 @@ class LabsTable extends React.Component {
             </TableRow>
           </TableHead>
           <TableBody>
+            {
+              //TODO: this can be moved to own render method
+            }
             {this.props.rows.map((row, index) => {
               return (
                 <TableRow key={row.id}>
@@ -83,6 +86,19 @@ class LabsTable extends React.Component {
                     >
                       <MoreVert />
                     </IconButton>
+                    {
+                      //TODO:
+                      //Menu can be moved to own component like
+                      //<LabsTableMenu
+                      // onShowMaterials={this.handleShowMaterials}
+                      // onStartTest={this.handleStartTest}
+                      // onUploadReport={this.handleUploadReportTest}
+                      // onBegin={this.handleBegin}
+                      // anchorEl={this.state.anchors[index]} // and here can be something better
+                      // open={Boolean(this.state.anchors[index])}
+                      // onClose={() => this.handleClose(index)}
+                      // ></LabsTableMenu>
+                    }
                     <Menu
                       anchorEl={this.state.anchors[index]}
                       open={Boolean(this.state.anchors[index])}

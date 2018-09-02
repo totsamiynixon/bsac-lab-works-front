@@ -11,6 +11,8 @@ import Chip from "@material-ui/core/Chip";
 import MenuItem from "@material-ui/core/MenuItem";
 import { emphasize } from "@material-ui/core/styles/colorManipulator";
 
+//TODO:Move it to NativeAutocomplete component in shared folder
+
 const styles = theme => ({
   root: {
     flexGrow: 1

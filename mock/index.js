@@ -20,3 +20,5 @@ const start = () => {
     });
 };
 start();
+
+//TODO:Think about how to start with dev server and hot reload
