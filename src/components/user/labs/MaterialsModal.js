@@ -27,11 +27,17 @@ class MaterialsModal extends React.Component {
           this.props.onModalClose();
         }}
       >
-        <DialogTitle id="responsive-dialog-title">
-          Выберите файлы, которые хотите просмотреть
+        <DialogTitle>
+          {this.props.materials != null && this.props.materials.length > 0
+            ? "Выберите файлы, которые хотите просмотреть"
+            : "Материалы к работе"}
         </DialogTitle>
         <DialogContent>
-          <MaterialsItemsList />
+          {this.props.materials != null && this.props.materials.length > 0 ? (
+            <MaterialsItemsList materials={this.props.materials} />
+          ) : (
+            <Typography>Нет материалов</Typography>
+          )}
         </DialogContent>
         <DialogActions>
           <Button

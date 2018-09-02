@@ -25,6 +25,9 @@ const styles = theme => ({
 });
 
 class MaterialsModalList extends React.Component {
+  constructor(props) {
+    super(props);
+  }
   state = {
     open: true
   };
@@ -33,42 +36,27 @@ class MaterialsModalList extends React.Component {
     this.setState(state => ({ open: !state.open }));
   };
 
+  renderListItems() {
+    if (!this.props.materials) {
+      return null;
+    }
+    return this.props.materials.map((item, index) => {
+      return (
+        <ListItem button href={item.link} target="_blank" key={index}>
+          <ListItemIcon>
+            <InboxIcon />
+          </ListItemIcon>
+          <ListItemText inset primary={item.title} />
+        </ListItem>
+      );
+    });
+  }
   render() {
     const { classes } = this.props;
 
     return (
       <div className={classes.root}>
-        <List component="nav">
-          <ListItem button>
-            <ListItemIcon>
-              <SendIcon />
-            </ListItemIcon>
-            <ListItemText inset primary="Практикум 1" />
-          </ListItem>
-          <ListItem button>
-            <ListItemIcon>
-              <DraftsIcon />
-            </ListItemIcon>
-            <ListItemText inset primary="Практикум 2" />
-          </ListItem>
-          <ListItem button onClick={this.handleClick}>
-            <ListItemIcon>
-              <InboxIcon />
-            </ListItemIcon>
-            <ListItemText inset primary="Практикум 3" />
-            {this.state.open ? <ExpandLess /> : <ExpandMore />}
-          </ListItem>
-          <Collapse in={this.state.open} timeout="auto" unmountOnExit>
-            <List component="div" disablePadding>
-              <ListItem button className={classes.nested}>
-                <ListItemIcon>
-                  <StarBorder />
-                </ListItemIcon>
-                <ListItemText inset primary="Список задач" />
-              </ListItem>
-            </List>
-          </Collapse>
-        </List>
+        <List component="nav">{this.renderListItems()}</List>
       </div>
     );
   }

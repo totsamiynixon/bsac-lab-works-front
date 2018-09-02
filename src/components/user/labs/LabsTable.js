@@ -24,46 +24,31 @@ const styles = theme => ({
   }
 });
 
-let id = 0;
-function createData(name, state) {
-  id += 1;
-  return { id, name, state };
-}
-
-const rows = [
-  createData("Моделирование цифровых устройств", "Защищена"),
-  createData("Синтез логических схем", "Отчет проверяется"),
-  createData("Исследование работы шифраторов и дешифраторов", "Выполнил"),
-  createData(
-    "Исследование работы мультиплексоров и демультиплексоров",
-    "Допущен к выполнению"
-  ),
-  createData("Исследование триггеров", "Не допущен"),
-  createData("Исследование регистров памяти и регистров сдвига", "Не доступна")
-];
-
 class LabsTable extends React.Component {
   state = {
-    anchorEl: null
+    anchors: []
   };
 
-  handleClick = event => {
-    this.setState({ anchorEl: event.currentTarget });
+  handleClose = index => {
+    const anchors = this.state.anchors;
+    anchors[index] = null;
+    this.setState({ anchors });
   };
-
-  handleClose = () => {
-    this.setState({ anchorEl: null });
-  };
-
+  componentWillReceiveProps(nextProps) {
+    if (JSON.stringify(this.props.rows) != JSON.stringify(nextProps.rows)) {
+      this.setState({ anchors: [] });
+    }
+  }
   showMaterials = id => {
-    this.handleClose();
+    let index = this.props.rows.findIndex(value => {
+      return value.id == id;
+    });
+    this.handleClose(index);
     this.props.onShowMaterials(id);
   };
-
   render() {
     const { classes } = this.props;
     const { anchorEl } = this.state;
-
     return (
       <Paper className={classes.root}>
         <Table className={classes.table}>
@@ -75,23 +60,33 @@ class LabsTable extends React.Component {
             </TableRow>
           </TableHead>
           <TableBody>
-            {rows.map(row => {
+            {this.props.rows.map((row, index) => {
               return (
                 <TableRow key={row.id}>
                   <TableCell>{row.name}</TableCell>
                   <TableCell>{row.state}</TableCell>
                   <TableCell>
                     <IconButton
-                      aria-owns={Boolean(anchorEl) ? "menu" : null}
+                      aria-owns={
+                        Boolean(this.state.anchors[index]) ? "menu" : null
+                      }
                       aria-haspopup="true"
-                      onClick={this.handleClick}
+                      onClick={event => {
+                        const anchors = this.state.anchors;
+                        if (anchors[index] === "undefined") {
+                          anchors.push(event.currentTarget);
+                        } else {
+                          anchors[index] = event.currentTarget;
+                        }
+                        this.setState({ anchors });
+                      }}
                     >
                       <MoreVert />
                     </IconButton>
                     <Menu
-                      anchorEl={anchorEl}
-                      open={Boolean(anchorEl)}
-                      onClose={this.handleClose}
+                      anchorEl={this.state.anchors[index]}
+                      open={Boolean(this.state.anchors[index])}
+                      onClose={() => this.handleClose(index)}
                       TransitionComponent={Fade}
                     >
                       <MenuItem onClick={() => this.showMaterials(row.id)}>

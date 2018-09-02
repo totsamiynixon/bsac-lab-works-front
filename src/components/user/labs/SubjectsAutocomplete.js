@@ -11,18 +11,6 @@ import Chip from "@material-ui/core/Chip";
 import MenuItem from "@material-ui/core/MenuItem";
 import { emphasize } from "@material-ui/core/styles/colorManipulator";
 
-const suggestions = [
-  { label: "Аэрокосмическое приборостроение", id: 0 },
-  { label: "Контроль качества", id: 1 },
-  { label: "Проектирование зданий и сооружений", id: 2 },
-  { label: "Судостроение", id: 3 },
-  { label: "Химические технологии и материаловедение", id: 4 },
-  { label: "Биомедицинское приборостроение", id: 5 }
-].map(suggestion => ({
-  value: suggestion.id,
-  label: suggestion.label
-}));
-
 const styles = theme => ({
   root: {
     flexGrow: 1
@@ -192,15 +180,31 @@ const components = {
 };
 
 class IntegrationReactSelect extends React.Component {
+  constructor(props) {
+    super(props);
+  }
   state = {
     single: null,
-    multi: null
+    multi: null,
+    value: null
   };
 
-  handleChange = name => value => {
+  handleChange = choice => {
     this.setState({
-      [name]: value
+      value: choice
     });
+    if (
+      this.props.onChange &&
+      JSON.stringify(this.state.value) != JSON.stringify(choice)
+    ) {
+      if (!this.state.multi) {
+        this.props.onChange(choice.value);
+      } else {
+        return choice.map((item, index) => {
+          return item.value;
+        });
+      }
+    }
   };
 
   render() {
@@ -218,10 +222,10 @@ class IntegrationReactSelect extends React.Component {
         <Select
           classes={classes}
           styles={selectStyles}
-          options={suggestions}
+          options={this.props.options}
           components={components}
-          value={this.state.single}
-          onChange={this.handleChange("single")}
+          value={this.state.value}
+          onChange={this.handleChange}
           placeholder="Выберите предмет"
         />
       </div>
