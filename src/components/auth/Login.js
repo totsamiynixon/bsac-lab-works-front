@@ -31,7 +31,7 @@ class Login extends React.Component {
 
   checkLoggedIn() {
     if (localStorage.getItem("isLoggedIn") === "true") {
-      this.props.history.push();
+      this.props.history.push("/");
     }
   }
   render() {

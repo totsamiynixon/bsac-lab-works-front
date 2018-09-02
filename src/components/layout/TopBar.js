@@ -34,7 +34,7 @@ function ButtonAppBar(props) {
           <Button color="inherit" component={Link} to="/login">
             Логин
           </Button>
-          <Button color="inherit" component={Link} to="/labs">
+          <Button color="inherit" component={Link} to="/">
             Лабораторные
           </Button>
         </Toolbar>

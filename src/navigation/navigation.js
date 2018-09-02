@@ -7,18 +7,16 @@ import Login from "../components/auth/Login";
 import Labs from "../components/user/Labs";
 
 export default class ApplicationRouter extends React.Component {
+  beforeRouteCh;
   render() {
     return (
       <BrowserRouter>
-        <Route path="/">
-          <AppLayout>
-            <Switch>
-              <Redirect from="/" exact to="/labs" />
-              <PrivateRoute path="/labs" component={Labs} />
-              <Route path="/login" component={Login} />
-            </Switch>
-          </AppLayout>
-        </Route>
+        <AppLayout>
+          <Switch>
+            <PrivateRoute exact path="/" component={Labs} />
+            <Route path="/login" component={Login} />
+          </Switch>
+        </AppLayout>
       </BrowserRouter>
     );
   }

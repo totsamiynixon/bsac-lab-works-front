@@ -2,16 +2,19 @@ import React from "react";
 import axios from "axios";
 
 import LabsTable from "./labs/LabsTable";
-import MaterialsModal from "./labs/MaterialsModal";
+import MaterialsModal from "./labs/modals/MaterialsModal";
+import UploadReportModal from "./labs/modals/UploadReportModal";
 import SubjectsAutocomplete from "./labs/SubjectsAutocomplete";
 
 //TODO:Implement flux or redux
 class Labs extends React.Component {
   state = {
-    open: false,
+    openMaterialsModal: false,
+    openReportModal: false,
     subjects: [],
     labs: [],
-    materials: []
+    materials: [],
+    reports: []
   };
 
   handleShowMaterials = labId => {
@@ -22,7 +25,7 @@ class Labs extends React.Component {
         }
       })
       .then(response => {
-        this.setState({ materials: response.data, open: true });
+        this.setState({ materials: response.data, openMaterialsModal: true });
       });
   };
 
@@ -47,6 +50,20 @@ class Labs extends React.Component {
         this.setState({ labs: response.data });
       });
   };
+
+  handleUploadReportModalClose() {
+    this.setState({ openReportModal: false });
+  }
+
+  handleSaveFiles(labId, files) {
+    formData.append("labId", labId);
+    formData.append("files", files);
+    axios.post("api/uploads/report", formData, {
+      headers: {
+        "Content-Type": "multipart/form-data"
+      }
+    });
+  }
   render() {
     return (
       <div>
@@ -65,9 +82,15 @@ class Labs extends React.Component {
             onShowMaterials={this.handleShowMaterials}
           />
           <MaterialsModal
-            open={this.state.open}
+            open={this.state.openMaterialsModal}
             onModalClose={this.handleModalClose}
             materials={this.state.materials}
+          />
+          <UploadReportModal
+            open={this.state.openMaterialsModal}
+            reports={this.state.reports}
+            onSave={this.handleSaveFiles.bind(this)}
+            onClose={this.handleReportModalClose.bind(this)}
           />
         </div>
       </div>
