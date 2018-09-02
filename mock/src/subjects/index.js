@@ -3,11 +3,15 @@ module.exports = client => {
     .mockWithCallback(
       {
         method: "GET",
-        path: "/api/reports/upload"
+        path: "/api/subjects"
       },
       function(request) {
         var response = {
-          statusCode: 200
+          statusCode: 200,
+          headers: {
+            "Content-Type": ["application/json; charset=utf-8"]
+          },
+          body: JSON.stringify(subjects)
         };
         return response;
       },
@@ -26,7 +30,6 @@ module.exports = client => {
 };
 
 const subjects = [
-  { name: "Аэрокосмическое приборостроение", id: 5 },
   { name: "ЦиМПУ", id: 1 },
   { name: "Проектирование зданий и сооружений", id: 2 },
   { name: "Судостроение", id: 3 },

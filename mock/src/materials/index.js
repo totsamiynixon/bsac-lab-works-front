@@ -21,7 +21,6 @@ module.exports = client => {
           )
         };
         return response;
-        F;
       },
       {
         unlimited: true

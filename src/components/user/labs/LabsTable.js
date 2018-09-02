@@ -46,6 +46,13 @@ class LabsTable extends React.Component {
     this.handleClose(index);
     this.props.onShowMaterials(id);
   };
+  showReports = id => {
+    let index = this.props.rows.findIndex(value => {
+      return value.id == id;
+    });
+    this.handleClose(index);
+    this.props.onShowReports(id);
+  };
   render() {
     const { classes } = this.props;
     const { anchorEl } = this.state;
@@ -108,10 +115,8 @@ class LabsTable extends React.Component {
                       <MenuItem onClick={() => this.showMaterials(row.id)}>
                         Посмотреть материалы
                       </MenuItem>
-                      <MenuItem onClick={() => this.showMaterials(row.id)}>
-                        Пройти тест
-                      </MenuItem>
-                      <MenuItem onClick={() => this.showMaterials(row.id)}>
+                      <MenuItem>Пройти тест</MenuItem>
+                      <MenuItem onClick={() => this.showReports(row.id)}>
                         Загрузить отчет
                       </MenuItem>
                       <MenuItem onClick={this.handleClose}>Выполнить</MenuItem>

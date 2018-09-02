@@ -7,7 +7,6 @@ export default class ApplicationLayout extends React.Component {
     super(props);
   }
   render() {
-    console.log(this.props.children);
     return (
       <div id="main-layout">
         <TopBar />

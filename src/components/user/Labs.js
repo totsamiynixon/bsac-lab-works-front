@@ -3,7 +3,7 @@ import axios from "axios";
 
 import LabsTable from "./labs/LabsTable";
 import MaterialsModal from "./labs/modals/MaterialsModal";
-import UploadReportModal from "./labs/modals/UploadReportModal";
+//import UploadReportModal from "./labs/modals/UploadReportModal";
 import SubjectsAutocomplete from "./labs/SubjectsAutocomplete";
 
 //TODO:Implement flux or redux
@@ -17,28 +17,13 @@ class Labs extends React.Component {
     reports: []
   };
 
-  handleShowMaterials = labId => {
-    axios
-      .get("/api/materials", {
-        params: {
-          labId
-        }
-      })
-      .then(response => {
-        this.setState({ materials: response.data, openMaterialsModal: true });
-      });
-  };
-
-  handleModalClose = () => {
-    this.setState({ open: false });
-  };
-
   componentDidMount() {
     axios.get("/api/subjects").then(response => {
       this.setState({ subjects: response.data });
     });
   }
 
+  //Subjects
   loadLabs = subjectId => {
     axios
       .get("/api/labs", {
@@ -51,18 +36,63 @@ class Labs extends React.Component {
       });
   };
 
-  handleUploadReportModalClose() {
+  //Materials
+  handleShowMaterials = labId => {
+    axios
+      .get("/api/materials", {
+        params: {
+          labId
+        }
+      })
+      .then(response => {
+        this.setState({ materials: response.data, openMaterialsModal: true });
+      });
+  };
+
+  handleMaterialsModalClose = () => {
+    this.setState({ openMaterialsModal: false });
+  };
+
+  //Reports
+  handleShowReports = labId => {
+    axios
+      .get("/api/reports", {
+        params: {
+          labId
+        }
+      })
+      .then(response => {
+        this.setState({ reports: response.data, openReportModal: true });
+      });
+  };
+
+  handleReportsModalClose() {
     this.setState({ openReportModal: false });
   }
 
-  handleSaveFiles(labId, files) {
-    formData.append("labId", labId);
-    formData.append("files", files);
-    axios.post("api/uploads/report", formData, {
+  handleSaveReports(payload) {
+    var formData = new FormData();
+    formData.append("labId", payload.labId);
+    formData.append("files", payload.files);
+    axios.post("api/reports/upload", formData, {
       headers: {
         "Content-Type": "multipart/form-data"
       }
     });
+  }
+  handleDeleteReport(reportId) {
+    var formData = new FormData();
+    axios
+      .delete("api/reports", {
+        params: {
+          id: reportId
+        }
+      })
+      .then(() => {
+        const { reports } = this.state.reports;
+        let index = reports.findIndex(item => item.id == reportId);
+        if (index != null) this.setState(this.splice(index, 1));
+      });
   }
   render() {
     return (
@@ -80,18 +110,20 @@ class Labs extends React.Component {
           <LabsTable
             rows={this.state.labs}
             onShowMaterials={this.handleShowMaterials}
+            onShowReports={this.handleShowReports}
           />
           <MaterialsModal
             open={this.state.openMaterialsModal}
-            onModalClose={this.handleModalClose}
+            onModalClose={this.handleMaterialsModalClose}
             materials={this.state.materials}
           />
-          <UploadReportModal
-            open={this.state.openMaterialsModal}
+          {/*<UploadReportModal
+            open={this.state.openReportModal}
             reports={this.state.reports}
             onSave={this.handleSaveFiles.bind(this)}
-            onClose={this.handleReportModalClose.bind(this)}
-          />
+            onDelete={this.handleDeleteReport.bind(this)}
+            onClose={this.handleReportsModalClose.bind(this)}
+          />*/}
         </div>
       </div>
     );
