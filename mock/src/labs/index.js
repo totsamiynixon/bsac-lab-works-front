@@ -1,39 +1,14 @@
-module.exports = client => {
-  client
-    .mockWithCallback(
-      {
-        method: "GET",
-        path: "/api/labs",
-        queryStringParameters: {
-          subjectId: ["\\d+"]
-        }
-      },
-      function(request) {
-        var response = {
-          statusCode: 200,
-          headers: {
-            "Content-Type": ["application/json; charset=utf-8"]
-          },
-          body: JSON.stringify(
-            rows.filter(
-              f => f.subjectId == request.queryStringParameters.subjectId
-            )
-          )
-        };
-        return response;
-      },
-      {
-        unlimited: true
-      }
-    )
-    .then(
-      function(result) {
-        console.log("Mocking labs");
-      },
-      function(error) {
-        // handle error
-      }
-    );
+module.exports = server => {
+  server.get("/api/labs", (req, res) => {
+    console.log(req, res);
+    res.contentType("application/json");
+    if (!Number.isInteger(req.query.subjectId)) {
+      res.status(400);
+      return;
+    }
+    res.status(200);
+    res.json(rows.filter(f => f.subjectId == req.query.subjectId));
+  });
 };
 
 let id = 0;

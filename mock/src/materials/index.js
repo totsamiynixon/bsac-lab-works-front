@@ -1,39 +1,13 @@
-module.exports = client => {
-  client
-    .mockWithCallback(
-      {
-        method: "GET",
-        path: "/api/materials",
-        queryStringParameters: {
-          labId: ["\\d+"]
-        }
-      },
-      function(request) {
-        var response = {
-          statusCode: 200,
-          headers: {
-            "Content-Type": ["application/json; charset=utf-8"]
-          },
-          body: JSON.stringify(
-            materials.filter(
-              f => f.labId == request.queryStringParameters.labId
-            )
-          )
-        };
-        return response;
-      },
-      {
-        unlimited: true
-      }
-    )
-    .then(
-      function(result) {
-        console.log("Mocking Materials");
-      },
-      function(error) {
-        // handle error
-      }
-    );
+module.exports = server => {
+  server.get("/api/materials", (req, res) => {
+    res.contentType("application/json");
+    if (!Number.isInteger(req.query.labId)) {
+      res.status(400);
+      return;
+    }
+    res.status(200);
+    res.json(materials.filter(f => f.labId == req.query.labId));
+  });
 };
 
 const materials = [

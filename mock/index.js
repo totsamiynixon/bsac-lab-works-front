@@ -1,26 +1,23 @@
-var mockserver = require("mockserver-node");
-var mockServerClient = require("mockserver-client").mockServerClient;
 var starter = require("./src/index").start;
 const nodemon = require("nodemon");
+const jsonServer = require("json-server");
+const server = jsonServer.create();
+const middlewares = jsonServer.defaults();
 
-mockserver
-  .start_mockserver({
-    serverPort: 1080,
-    proxyPort: 1090,
-    systemProperties: "-Dmockserver.enableCORSForAllResponses=true"
-  })
-  .then(function() {
-    var client = mockServerClient("localhost", 1080);
-    starter(client);
-    nodemon({
-      ext: "js json",
-      watch: [__dirname + "/src"],
-      stdout: false,
-      readable: false
-    }).on("restart", function() {
-      client.reset().then(succes => starter(client));
-    });
-  });
+// Set default middlewares (logger, static, cors and no-cache)
+server.use(middlewares);
+
+// To handle POST, PUT and PATCH you need to use a body-parser
+// You can use the one used by JSON Server
+server.use(jsonServer.bodyParser);
+
+// Configure routes
+starter(server);
+
+var instance = server.listen(1080, () => {
+  console.log("JSON Server is running");
+});
+
 process.once("SIGINT", function() {
   process.exit(1);
 });

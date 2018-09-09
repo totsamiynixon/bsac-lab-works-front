@@ -4,11 +4,11 @@ var initMaterials = require("./materials");
 var initReports = require("./reports");
 
 module.exports = {
-  start: client => {
-    initLabs(client);
-    initSubjects(client);
-    initMaterials(client);
-    initReports(client);
+  start: server => {
+    initLabs(server);
+    initSubjects(server);
+    initMaterials(server);
+    initReports(server);
   }
 };
 //TODO:Think about how to start with dev server and hot reload

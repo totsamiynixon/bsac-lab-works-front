@@ -1,58 +1,34 @@
-module.exports = client => {
-  client.mockWithCallback(
-    {
-      method: "GET",
-      path: "/api/reports",
-      queryStringParameters: {
-        labId: ["\\d+"]
-      }
-    },
-    function(request) {
-      var response = {
-        statusCode: 200,
-        body: JSON.stringify(getReports(request.queryStringParameters.labId))
-      };
-      return response;
-    },
-    {
-      unlimited: true
+module.exports = server => {
+  server.get("/api/reports", (req, res) => {
+    console.log(req.query);
+    let labId = Number.parseInt(req.query.labId);
+    if (!Number.isInteger(labId)) {
+      res.status(400);
+      res.send("Wrong query");
+      return;
     }
-  );
-  client.mockWithCallback(
-    {
-      method: "POST",
-      path: "/api/reports/upload",
-      queryStringParameters: {
-        labId: ["\\d+"]
-      },
-      headers: {
-        "Content-Type": ["multipart/form-data"]
-      }
-    },
-    function(request) {
-      var response = {
-        statusCode: 200
-      };
-      return response;
-    },
-    {
-      unlimited: true
-    }
-  );
+    res.contentType("application/json");
+    res.status(200);
+    res.json(getReports(labId));
+    res.send();
+  });
+
+  server.post("/api/reports/upload", (req, res) => {
+    console.log(req, res);
+    res.status(200);
+  });
 };
 
 function getReports(labId) {
-  return (
-    reports
-      .sort(function() {
-        return 0.5 - Math.random();
-      })
-      .slice(0, 3),
-    map(item => {
+  return reports
+    .sort(function() {
+      return 0.5 - Math.random();
+    })
+    .slice(0, 3)
+    .map(item => {
       item.labId = labId;
       return item;
-    })
-  );
+    });
 }
 
 const reports = [
