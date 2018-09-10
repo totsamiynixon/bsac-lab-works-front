@@ -12,6 +12,7 @@ import MoreVert from "@material-ui/icons/MoreVert";
 import MenuItem from "@material-ui/core/MenuItem";
 import Menu from "@material-ui/core/Menu";
 import Fade from "@material-ui/core/Fade";
+import { Link } from "react-router-dom";
 
 const styles = theme => ({
   root: {
@@ -115,7 +116,9 @@ class LabsTable extends React.Component {
                       <MenuItem onClick={() => this.showMaterials(row.id)}>
                         Посмотреть материалы
                       </MenuItem>
-                      <MenuItem>Пройти тест</MenuItem>
+                      <MenuItem component={Link} to={"/tests/" + row.id}>
+                        Пройти тест
+                      </MenuItem>
                       <MenuItem onClick={() => this.showReports(row.id)}>
                         Загрузить отчет
                       </MenuItem>

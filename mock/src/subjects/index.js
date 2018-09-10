@@ -3,6 +3,7 @@ module.exports = server => {
     res.contentType("application/json");
     res.status(200);
     res.json(subjects);
+    res.send();
   });
 };
 

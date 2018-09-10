@@ -1,5 +1,4 @@
 var starter = require("./src/index").start;
-const nodemon = require("nodemon");
 const jsonServer = require("json-server");
 const server = jsonServer.create();
 const middlewares = jsonServer.defaults();

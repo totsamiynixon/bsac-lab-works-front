@@ -10,7 +10,7 @@ export default class ApplicationLayout extends React.Component {
     return (
       <div id="main-layout">
         <TopBar />
-        {this.props.children}
+        <div className="layout-container">{this.props.children}</div>
       </div>
     );
   }

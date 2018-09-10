@@ -97,34 +97,32 @@ class Labs extends React.Component {
   render() {
     return (
       <div>
-        <div style={{ padding: "50px" }}>
-          <SubjectsAutocomplete
-            options={this.state.subjects.map((item, index) => {
-              return {
-                label: item.name,
-                value: item.id
-              };
-            })}
-            onChange={this.loadLabs}
-          />
-          <LabsTable
-            rows={this.state.labs}
-            onShowMaterials={this.handleShowMaterials}
-            onShowReports={this.handleShowReports}
-          />
-          <MaterialsModal
-            open={this.state.openMaterialsModal}
-            onModalClose={this.handleMaterialsModalClose}
-            materials={this.state.materials}
-          />
-          {/*<UploadReportModal
+        <SubjectsAutocomplete
+          options={this.state.subjects.map((item, index) => {
+            return {
+              label: item.name,
+              value: item.id
+            };
+          })}
+          onChange={this.loadLabs}
+        />
+        <LabsTable
+          rows={this.state.labs}
+          onShowMaterials={this.handleShowMaterials}
+          onShowReports={this.handleShowReports}
+        />
+        <MaterialsModal
+          open={this.state.openMaterialsModal}
+          onModalClose={this.handleMaterialsModalClose}
+          materials={this.state.materials}
+        />
+        {/*<UploadReportModal
             open={this.state.openReportModal}
             reports={this.state.reports}
             onSave={this.handleSaveFiles.bind(this)}
             onDelete={this.handleDeleteReport.bind(this)}
             onClose={this.handleReportsModalClose.bind(this)}
           />*/}
-        </div>
       </div>
     );
   }

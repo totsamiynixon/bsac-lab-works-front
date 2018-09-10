@@ -16,6 +16,7 @@ module.exports = server => {
   server.post("/api/reports/upload", (req, res) => {
     console.log(req, res);
     res.status(200);
+    res.send();
   });
 };
 

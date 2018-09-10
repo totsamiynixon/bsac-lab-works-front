@@ -1,13 +1,14 @@
 module.exports = server => {
   server.get("/api/labs", (req, res) => {
-    console.log(req, res);
-    res.contentType("application/json");
-    if (!Number.isInteger(req.query.subjectId)) {
+    if (!Number.isInteger(Number.parseInt(req.query.subjectId))) {
       res.status(400);
+      res.send();
       return;
     }
+    res.contentType("application/json");
     res.status(200);
     res.json(rows.filter(f => f.subjectId == req.query.subjectId));
+    res.send();
   });
 };
 

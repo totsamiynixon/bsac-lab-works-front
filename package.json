@@ -15,12 +15,13 @@
     "react-select": "^2.0.0"
   },
   "scripts": {
-    "start": "node mock/index.js | react-scripts start",
+    "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject"
   },
   "devDependencies": {
+    "faker": "^4.1.0",
     "json-server": "^0.14.0"
   }
 }

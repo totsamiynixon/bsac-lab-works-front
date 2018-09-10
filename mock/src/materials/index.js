@@ -1,12 +1,14 @@
 module.exports = server => {
   server.get("/api/materials", (req, res) => {
-    res.contentType("application/json");
-    if (!Number.isInteger(req.query.labId)) {
+    if (!Number.isInteger(Number.parseInt(req.query.labId))) {
       res.status(400);
+      res.send();
       return;
     }
+    res.contentType("application/json");
     res.status(200);
     res.json(materials.filter(f => f.labId == req.query.labId));
+    res.send();
   });
 };
 
