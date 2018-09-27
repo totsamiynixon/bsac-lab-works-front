@@ -1,38 +1,16 @@
-module.exports = client => {
-  client
-    .mockWithCallback(
-      {
-        method: "GET",
-        path: "/api/subjects"
-      },
-      function(request) {
-        var response = {
-          statusCode: 200,
-          headers: {
-            "Content-Type": ["application/json; charset=utf-8"]
-          },
-          body: JSON.stringify(subjects)
-        };
-        return response;
-      },
-      {
-        unlimited: true
-      }
-    )
-    .then(
-      function(result) {
-        console.log("Mocking Subjects");
-      },
-      function(error) {
-        // handle error
-      }
-    );
+module.exports = server => {
+    server.get("/api/subjects", (req, res) => {
+        res.contentType("application/json");
+        res.status(200);
+        res.json(subjects);
+        res.send();
+    });
 };
 
 const subjects = [
-  { name: "ЦиМПУ", id: 1 },
-  { name: "Проектирование зданий и сооружений", id: 2 },
-  { name: "Судостроение", id: 3 },
-  { name: "Химические технологии и материаловедение", id: 4 },
-  { name: "Биомедицинское приборостроение", id: 5 }
+    { name: "ЦиМПУ", id: 1 },
+    { name: "Проектирование зданий и сооружений", id: 2 },
+    { name: "Судостроение", id: 3 },
+    { name: "Химические технологии и материаловедение", id: 4 },
+    { name: "Биомедицинское приборостроение", id: 5 }
 ];

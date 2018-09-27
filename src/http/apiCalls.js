@@ -12,5 +12,5 @@ export const httpService = (params, props) =>{
 
 
 httpsService(APICalls.getAllSubjects, {
-    
+
 }).then(response, error)*/

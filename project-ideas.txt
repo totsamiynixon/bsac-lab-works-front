@@ -31,4 +31,7 @@ master содержит все файлы и свой travis.yml конфиг;
 мерж staging -> production деплой в прод
 
 
-Ваня: подумать перенести структуру данных для Labs компонента в формате "все сразу"
+iVanThePussyDestrouer: подумать перенести структуру данных для Labs компонента в формате "все сразу"
+iVanThePussyDestrouer: загрузка с сервера(мока) всех данных(целиком labs или materials), после чего выборка нужных по id уже на клиенте
+
+user enters webApp and signing in. In case user hasn't an account he registers (any username and pass can be inputted, but group number and name can be chosen only from predetermined list which is storing in database)
