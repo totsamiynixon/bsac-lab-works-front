@@ -8,6 +8,8 @@ import subjects from './subjects';
 import groups from './groups';
 import names from './names';
 import login from './login';
+import registration from './register';
+import alerts from './alerts';
 
 export default combineReducers({
     login,
@@ -16,5 +18,7 @@ export default combineReducers({
     reports,
     subjects,
     groups,
-    names
+    names,
+    registration,
+    alerts
 });

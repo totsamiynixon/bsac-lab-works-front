@@ -1,6 +1,6 @@
 import { takeLatest, call, put } from "redux-saga/effects";
 import { LOGIN_REQUEST, SUBMIT_REGISTER } from "../constants/action-types";
-import { loginSuccess, loginFailure, registerSuccess, registerFailure } from "../actions/user";
+import { loginSuccess, loginFailure, registerSuccess, registerFailure, successMessage, errorMessage } from "../actions/user";
 import axios from "axios";
 
 export function* watchLogin () {
@@ -10,14 +10,17 @@ export function* watchLogin () {
 export function* loginRequest (loginRequest) {
     try {
         if (!loginRequest.user.username || !loginRequest.user.password) {
+            yield put(errorMessage(`Заполните поля`));
             console.log('Fill in the fields');
         } else {
             let users = JSON.parse(localStorage.getItem('users'));
             let authorisedUser = users.filter(user => { if (user.Login === loginRequest.user.username &&
                                                             user.password === loginRequest.user.password) return user;});
+            console.log(authorisedUser);
             if (authorisedUser.length !== 0) {
                 yield put(loginSuccess(authorisedUser[0]));
             } else {
+                yield put(errorMessage(`Не верный логин или пароль`));
                 console.log("incorrect login or password");
             }
         }
@@ -32,50 +35,30 @@ export function* watchRegister () {
 
 export function* submitRegister (submitRegister) {
     try {
-        // const newUserData = {
-        //     Group: submitRegister.group,
-        //     FullName: submitRegister.fullname,
-        //     Login: submitRegister.userlogin,
-        //     password: submitRegister.password
-        // };
-        const response = yield call(axios, `http://localhost:1080/users/register?Group=${submitRegister.group}
-                                                                                &FullName=${submitRegister.fullname}`);
-        console.log(response);
-        yield put(registerSuccess(response));
+        let users = JSON.parse(localStorage.getItem('users')) || [];
+        let newUser = {
+            Group: submitRegister.group,
+            FullName: submitRegister.fullname,
+            Login: submitRegister.userlogin,
+            password: submitRegister.password
+        };
+        let duplicateUser = users.filter(user => {
+            return user.Login === newUser.Login;
+        }).length;
+        if (duplicateUser) {
+            yield put(errorMessage(`Такой пользователь уже существует!`));
+            console.log("The user has already created");
+        } else {
+            const response = yield call(axios, `http://localhost:1080/users/register?Group=${submitRegister.group}
+                                                                            &FullName=${submitRegister.fullname}`);
+            users.push(newUser);
+            console.log(users);
+            localStorage.setItem('users', JSON.stringify(users));
+            yield put(registerSuccess(response));
+            yield put(successMessage(`Регистрация прошла успешно`));
+        }
     } catch (e) {
         yield put(registerFailure());
+        yield put(errorMessage(`Ошибка регистрации`));
     }
 }
-
-// function handleResponse(response) {
-//     return response
-//         .text()
-//         .then(text => {
-//             const data = text && JSON.parse(text);
-//             if (!response.ok) {
-//                 const error = (data && data.message) || response.statusText;
-//                 return Promise.reject(error);
-//             }
-//             return data;
-//         });
-// }
-
-// function fetchUser () {
-//     const requestOptions = {
-//         method: 'POST',
-//         headers: { 'Content-Type': 'application/json' },
-//         // body: JSON.stringify({ username, password })
-//     };
-//
-//     return fetch(`${config.apiUrl}/users/authenticate`, requestOptions)
-//         .then(handleResponse)
-//         .then(user => {
-//             // login successful if there's a jwt token in the response
-//             if (user.token) {
-//                 // store user details and jwt token in local storage to keep user logged in between page refreshes
-//                 localStorage.setItem('user', JSON.stringify(user));
-//             }
-//
-//             return user;
-//         });
-// }

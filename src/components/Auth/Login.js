@@ -2,13 +2,14 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
-import { loginRequest } from "../../actions/user";
+import { loginRequest, clear } from "../../actions/user";
 import Input from "@material-ui/core/Input";
 import InputLabel from "@material-ui/core/InputLabel";
 import FormControl from "@material-ui/core/FormControl";
 import Button from "@material-ui/core/Button";
 import Card from "@material-ui/core/Card";
 import { withStyles } from "@material-ui/core/styles";
+import "./styles.css"
 
 class Login extends React.Component {
   constructor(props) {
@@ -25,7 +26,12 @@ class Login extends React.Component {
     return (
       <div className="loginForm">
         <Card className={classes.root}>
-          <FormControl
+
+            {this.props.alertMessage &&
+            <div className={`alert ${this.props.alertType}`}>{this.props.alertMessage}</div>
+            }
+
+            <FormControl
             className={classes.input}
             onChange={this.handleChange("login")}
           >
@@ -45,6 +51,7 @@ class Login extends React.Component {
           </FormControl>
           <FormControl className={classes.buttons}>
             <Button
+                className={"firstButton"}
                 variant="contained"
                 color="primary"
                 component={Link}
@@ -60,6 +67,7 @@ class Login extends React.Component {
                 color="primary"
                 component={Link}
                 to="/registration"
+                onClick={this.props.clearAlert}
             >
                 Зарегистрироваться
             </Button>
@@ -86,13 +94,16 @@ const styles = theme => ({
     width: "600px",
     padding: "30px",
     backgroundColor: theme.palette.background.paper,
-    marginTop: "-100px"
+    marginTop: "-130px"
+  },
+  firstButton:{
+    paddingTop: "30px"
   },
   input: {
     marginBottom: "30px"
   },
   buttons: {
-      paddingTop: 30,
+      paddingTop: "30px",
       display: "flex",
       flexDirection: "column",
       justifyContent: "center",
@@ -103,13 +114,15 @@ const styles = theme => ({
 
 const mapStateToProps = (state) => {
   return {
-
+      alertType: state.alerts.type,
+      alertMessage: state.alerts.message
   }
 };
 
 const mapDispatchToProps = (dispatch) => {
   return {
-     loginRequest: bindActionCreators(loginRequest, dispatch)
+     loginRequest: bindActionCreators(loginRequest, dispatch),
+     clearAlert: bindActionCreators(clear, dispatch)
   }
 };
 

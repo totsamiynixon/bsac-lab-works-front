@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import ReactDOM from "react-dom";
 import { Provider, connect } from "react-redux";
 import store from "./helpers/store";
+import { bindActionCreators } from "redux";
 import configureFakeBackend from './helpers/fake-user-backend';
 
 //COMPONENTS
@@ -20,11 +21,23 @@ class App extends Component {
     return (
         <div>
             <ApplicationLayout/>
+
             <Navigation />
         </div>
     )
   }
 }
+
+const mapStateToProps = (state) => {
+    return {
+    }
+};
+
+const mapDispatchToProps = (dispatch) => {
+    return {
+
+    }
+};
 
 const WrappedApp = connect()(App);
 

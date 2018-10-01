@@ -9,6 +9,7 @@
     "material-ui-dropzone": "^1.0.3",
     "react": "^16.4.2",
     "react-dom": "^16.4.2",
+    "react-material-ui-form-validator": "^2.0.2",
     "react-redux": "^5.0.7",
     "react-router": "^4.3.1",
     "react-router-dom": "^4.3.1",

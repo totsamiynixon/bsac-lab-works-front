@@ -11,7 +11,10 @@ import {
     REQUEST_GROUPS_FAILURE,
     FETCH_NAMES,
     REQUEST_NAMES_SUCCESS,
-    REQUEST_NAMES_FAILURE
+    REQUEST_NAMES_FAILURE,
+    SUCCESS_MESSAGE,
+    ERROR_MESSAGE,
+    CLEAR
 } from '../constants/action-types';
 
 export const loginRequest = (username, password) => {
@@ -36,13 +39,14 @@ export const logout = () => {
     return { type: LOGOUT }
 };
 
-export const submitRegister = (group, fullname, userlogin, password) => {
+export const submitRegister = (group, fullname, userlogin, password, confirmPassword) => {
     return {
         type: SUBMIT_REGISTER,
         group,
         fullname,
         userlogin,
-        password
+        password,
+        confirmPassword
     }
 };
 
@@ -88,4 +92,22 @@ export const requestNamesSuccess = (names) => {
 
 export const requestNamesFailure = () => {
     return { type: REQUEST_NAMES_FAILURE }
+};
+
+export const successMessage = (message) => {
+    return {
+        type: SUCCESS_MESSAGE,
+        message
+    }
+};
+
+export const errorMessage = (message) => {
+    return {
+        type: ERROR_MESSAGE,
+        message
+    }
+};
+
+export const clear = () => {
+    return { type: CLEAR }
 };

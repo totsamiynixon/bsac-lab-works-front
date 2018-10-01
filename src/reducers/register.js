@@ -3,9 +3,9 @@ import { SUBMIT_REGISTER, REGISTER_SUCCESS, REGISTER_FAILURE } from '../constant
 export default function registerReducer (state = {}, action) {
     switch (action.type) {
         case SUBMIT_REGISTER:
-            return { loggingIn: true };
+            return { registering: true };
         case REGISTER_SUCCESS:
-            return {};
+            return { registered: true };
         case REGISTER_FAILURE:
             return {};
         default:

@@ -12,7 +12,8 @@ import Button from "@material-ui/core/Button/Button";
 import Card from "@material-ui/core/Card/Card";
 import TextField from '@material-ui/core/TextField';
 import { bindActionCreators } from "redux";
-import { fetchGroups, fetchNames, submitRegister } from "../../actions/user";
+import { fetchGroups, fetchNames, submitRegister, errorMessage, clear } from "../../actions/user";
+import "./styles.css"
 
 class Registration extends Component {
     constructor(props) {
@@ -30,55 +31,17 @@ class Registration extends Component {
         this.props.fetchGroups();
     }
 
-    handleGroupsChange = event => {
-        this.setState({ [event.target.name]: Number(event.target.value) });
-        this.props.fetchNames(Number(event.target.value));
-    };
-
-    handleChange = event => {
-        this.setState({ [event.target.name]: event.target.value });
-    };
-
-    handleSubmitButton = () => {
-        if(!this.state.groupId || !this.state.fullname || !this.state.login || !this.state.pass || !this.state.passConfirm) {
-             console.log("Fill in all the fields");
-        } else if (this.state.pass !== this.state.passConfirm) {
-            console.log("Passwords don't match");
-        } else {
-            let users = JSON.parse(localStorage.getItem('users')) || [];
-            let newUser = {
-                Group: this.props.groups[this.state.groupId - 1].name,
-                FullName: this.state.fullname,
-                Login: this.state.login,
-                password: this.state.pass
-            };
-            let duplicateUser = users.filter(user => { return user.Login === newUser.Login; }).length;
-            if (duplicateUser) {
-                console.log("The user has already created");
-            } else {
-                this.props.submitRegister(
-                    this.props.groups[this.state.groupId - 1].name,
-                    this.state.fullname,
-                    this.state.login,
-                    this.state.pass
-                );
-                users.push(newUser);
-                console.log(users);
-                localStorage.setItem('users', JSON.stringify(users));
-            }
-        }
-    };
-
-    handleBackButton = () => {
-        this.props.history.push("/login");
-    };
-
     render() {
         const { classes } = this.props;
 
         return (
             <div className="registerForm">
                 <Card className={classes.root}>
+
+                    {this.props.alertMessage &&
+                    <div className={`alert ${this.props.alertType}`}>{this.props.alertMessage}</div>
+                    }
+
                     <FormControl className={classes.formControl}>
                         <InputLabel>Группа</InputLabel>
                         <Select
@@ -127,17 +90,32 @@ class Registration extends Component {
                                 name: 'pass',
                             }}
                         />
-                        <TextField
-                            label="Повторите пароль"
-                            type="password"
-                            autoComplete="current-password"
-                            margin="normal"
-                            value={this.state.passConfirm}
-                            onChange={this.handleChange}
-                            inputProps={{
-                                name: 'passConfirm',
-                            }}
-                        />
+                        {this.props.alertMessage ==="Пароли не совпадают!" ?
+                            (<TextField
+                                error
+                                label="Повторите пароль"
+                                type="password"
+                                autoComplete="current-password"
+                                margin="normal"
+                                value={this.state.passConfirm}
+                                onChange={this.handleChange}
+                                inputProps={{
+                                    name: 'passConfirm',
+                                }}
+                            />)
+                            :
+                            (<TextField
+                                label="Повторите пароль"
+                                type="password"
+                                autoComplete="current-password"
+                                margin="normal"
+                                value={this.state.passConfirm}
+                                onChange={this.handleChange}
+                                inputProps={{
+                                    name: 'passConfirm',
+                                }}
+                            />)
+                        }
                     </FormControl>
                     <FormControl className={classes.buttons}>
                         <Button
@@ -154,13 +132,49 @@ class Registration extends Component {
                             color="primary"
                             component={Link}
                             to="/login"
+                            onClick={this.props.clearAlert}
                         >
                             Отмена
                         </Button>
                     </FormControl>
+                    {this.props.registered && this.props.history.push('/login')}
                 </Card>
             </div>
         );
+    };
+
+    handleGroupsChange = event => {
+        this.setState({ [event.target.name]: Number(event.target.value) });
+        this.props.fetchNames(Number(event.target.value));
+    };
+
+    handleChange = event => {
+        this.setState({ [event.target.name]: event.target.value });
+    };
+
+    handleSubmitButton = () => {
+        if (!this.state.groupId || !this.state.fullname || !this.state.login || !this.state.pass || !this.state.passConfirm) {
+            this.props.errorAlert("Заполните все поля!");
+            console.log(this.state.groupId);
+            console.log(this.state.fullname);
+            console.log(this.state.login);
+            console.log(this.state.pass);
+            console.log(this.state.passConfirm);
+        } else {
+            if(this.state.pass !== this.state.passConfirm) {
+                this.props.errorAlert("Пароли не совпадают!");
+                console.log(this.state.pass);
+                console.log(this.state.passConfirm);
+            } else {
+                this.props.submitRegister(
+                    this.props.groups[this.state.groupId - 1].name,
+                    this.state.fullname,
+                    this.state.login,
+                    this.state.pass,
+                    this.state.passConfirm
+                );
+            }
+        }
     };
 }
 
@@ -168,8 +182,7 @@ const styles = theme => ({
     root: {
         display: "flex",
         flexWrap: "wrap",
-        justifyContent: "space-around",
-        overflow: "hidden",
+        justifyContent: "space-between",
         flexDirection: "column",
         width: "600px",
         paddingBottom: "30px",
@@ -180,6 +193,7 @@ const styles = theme => ({
         marginBottom: "20px"
     },
     buttons: {
+        width: "100%",
         display: "flex",
         flexDirection: "column",
         justifyContent: "center",
@@ -188,7 +202,7 @@ const styles = theme => ({
     },
     formControl: {
         margin: theme.spacing.unit,
-        minWidth: 120
+        minWidth: 600
     },
     selectEmpty: {
         marginTop: theme.spacing.unit * 2
@@ -198,7 +212,10 @@ const styles = theme => ({
 const mapStateToProps = state => {
     return {
         groups: state.groups.group,
-        names: state.names.name
+        names: state.names.name,
+        registered: state.registration.registered,
+        alertType: state.alerts.type,
+        alertMessage: state.alerts.message
     };
 };
 
@@ -206,7 +223,9 @@ const mapDispatchToProps = dispatch => {
     return {
         fetchGroups: bindActionCreators(fetchGroups, dispatch),
         fetchNames: bindActionCreators(fetchNames, dispatch),
-        submitRegister: bindActionCreators(submitRegister, dispatch)
+        submitRegister: bindActionCreators(submitRegister, dispatch),
+        errorAlert: bindActionCreators(errorMessage, dispatch),
+        clearAlert: bindActionCreators(clear, dispatch)
     }
 };
 

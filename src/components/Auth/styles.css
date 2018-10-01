@@ -1,0 +1,19 @@
+.alert {
+    width: 100%;
+    text-align: center;
+    border: 1px solid;
+    border-radius: 5px;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    color: #ffffff;
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
+
+.SUCCESS_MESSAGE {
+    background-color: #10B900;
+}
+
+.ERROR_MESSAGE {
+    background-color: #FF0000;
+}
